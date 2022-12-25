@@ -1,0 +1,12 @@
+variable "cluster_identifier" {}
+variable "engine" {}
+variable "engine_version" {}
+variable "database_name" {}
+variable "master_username" {}
+variable "backup_retention_period" {}
+variable "preferred_backup_window" {}
+variable "replica_count" {}
+variable "instance_class" {}
+variable "sg_name" {}
+variable "vpc_id" {}
+variable "security_group" {}
