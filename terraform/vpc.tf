@@ -4,6 +4,9 @@ data "aws_availability_zones" "available" {
 
 module "vpc" {
   source             = "terraform-aws-modules/vpc/aws"
+  providers = {
+     aws = aws.ap-southeast-1
+    }
   name               = "eks_vpc"
   cidr               = "10.0.0.0/16"
   azs                = data.aws_availability_zones.available.names

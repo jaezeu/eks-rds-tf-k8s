@@ -11,8 +11,8 @@ resource "random_id" "rng" {
   byte_length = 8
 }
 
-resource "aws_db_subnet_group" "default" {
-  name       = "${aws_rds_cluster.postgresql.cluster_identifier}-subnetgroup"
+resource "aws_db_subnet_group" "sgrp" {
+  name       = "private-subnetgroup"
   subnet_ids = var.subnet_ids
 }
 
@@ -39,6 +39,9 @@ EOF
 }
 
 resource "aws_rds_cluster" "postgresql" {
+  depends_on = [
+    aws_db_subnet_group.sgrp
+ ]
   cluster_identifier        = var.cluster_identifier
   engine                    = var.engine
   engine_version            = var.engine_version
@@ -49,10 +52,14 @@ resource "aws_rds_cluster" "postgresql" {
   preferred_backup_window   = var.preferred_backup_window
   storage_encrypted         = true
   final_snapshot_identifier = "${var.cluster_identifier}-final-${random_id.rng.hex}"
-  vpc_security_group_ids    = [aws_security_group.this.id]
+  vpc_security_group_ids    = var.vpc_security_group_ids
+  db_subnet_group_name      = aws_db_subnet_group.sgrp.name
 }
 
 resource "aws_rds_cluster_instance" "instances" {
+  depends_on = [
+    aws_db_subnet_group.sgrp
+ ]
   count                     = var.replica_count
   identifier                = "${aws_rds_cluster.postgresql.cluster_identifier}-instance-${count.index}"
   cluster_identifier        = aws_rds_cluster.postgresql.id
@@ -60,39 +67,5 @@ resource "aws_rds_cluster_instance" "instances" {
   engine                    = aws_rds_cluster.postgresql.engine
   engine_version            = aws_rds_cluster.postgresql.engine_version
   apply_immediately         = true
-}
-
-resource "aws_security_group" "this" {
-  name   = var.sg_name
-  vpc_id = var.vpc_id
-
-  dynamic "ingress" {
-    for_each = var.security_group["ingress"]
-    content {
-      description      = lookup(ingress.value, "description", null)
-      from_port        = ingress.value.from_port
-      to_port          = ingress.value.to_port
-      protocol         = ingress.value.protocol
-      cidr_blocks      = lookup(ingress.value, "cidr_blocks", null)
-      security_groups  = lookup(ingress.value, "security_group", null)
-      prefix_list_ids  = lookup(ingress.value, "prefix_list_ids", null)
-      ipv6_cidr_blocks = lookup(ingress.value, "ipv6_cidr_blocks", null)
-      self             = lookup(ingress.value, "self", false)
-    }
-  }
-
-  dynamic "egress" {
-    for_each = var.security_group["egress"]
-    content {
-      description      = lookup(egress.value, "description", null)
-      from_port        = egress.value.from_port
-      to_port          = egress.value.to_port
-      protocol         = egress.value.protocol
-      cidr_blocks      = lookup(egress.value, "cidr_blocks", null)
-      security_groups  = lookup(egress.value, "security_group", null)
-      prefix_list_ids  = lookup(egress.value, "prefix_list_ids", null)
-      ipv6_cidr_blocks = lookup(egress.value, "ipv6_cidr_blocks", null)
-      self             = lookup(egress.value, "self", false)
-    }
-  }
+  db_subnet_group_name      = aws_db_subnet_group.sgrp.name
 }
