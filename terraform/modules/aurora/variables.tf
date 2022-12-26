@@ -10,3 +10,4 @@ variable "instance_class" {}
 variable "sg_name" {}
 variable "vpc_id" {}
 variable "security_group" {}
+variable "subnet_ids" {}

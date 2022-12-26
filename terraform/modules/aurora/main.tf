@@ -1,7 +1,3 @@
-provider "aws" {
-#   region  = var.aws_region 
-}
-
 resource "random_password" "master"{
   length           = 16
   special          = true
@@ -13,6 +9,11 @@ resource "random_id" "rng" {
     first = "${timestamp()}"
   }     
   byte_length = 8
+}
+
+resource "aws_db_subnet_group" "default" {
+  name       = "${aws_rds_cluster.postgresql.cluster_identifier}-subnetgroup"
+  subnet_ids = var.subnet_ids
 }
 
 resource "aws_secretsmanager_secret" "rds_credentials" {
