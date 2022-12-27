@@ -4,6 +4,7 @@ resource "random_password" "master"{
   override_special = "_!%^"
 }
 
+#To be added to resources as a suffix that require a unique name(e.g. secrets)
 resource "random_id" "rng" {
   keepers = {
     first = "${timestamp()}"
@@ -12,9 +13,24 @@ resource "random_id" "rng" {
 }
 
 resource "aws_db_subnet_group" "sgrp" {
-  name       = "private-subnetgroup"
+  name       = var.subnet_group_name
   subnet_ids = var.subnet_ids
 }
+
+resource "aws_rds_cluster_parameter_group" "default" {
+  name        = var.cluster_pg_name
+  family      = var.pg_family
+
+  dynamic "parameter" {
+    for_each = var.parameters
+    content {
+      name         = parameter.value.name
+      value        = parameter.value.value
+    }
+  }
+}
+
+#Using secret manager to store database password so as to not store in plain text in terraform
 
 resource "aws_secretsmanager_secret" "rds_credentials" {
   name = "master-credentials-${random_id.rng.hex}"

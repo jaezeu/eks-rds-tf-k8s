@@ -29,11 +29,11 @@ module "vpc" {
   }
 }
 
-# module "vpc-useast" {
+# module "vpc-uswest" {
 #   source             = "terraform-aws-modules/vpc/aws"
 #   #Creating vpc in us-east region
 #   providers = {
-#      aws = aws.us-east-1
+#      aws = aws.us-west-1
 #     }
 #   name               = "eks_vpc"
 #   cidr               = "10.0.0.0/16"

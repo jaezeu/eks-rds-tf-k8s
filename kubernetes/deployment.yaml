@@ -4,7 +4,7 @@ metadata:
   name: defi-api-deployment
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: defi-api
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: defi-api
-          image: `8392019284.dkr.ecr.us-west-1.amazonaws.com/defi-api:1.0.0
+          image: 8392019284.dkr.ecr.us-west-1.amazonaws.com/defi-api:1.0.0
           ports:
             - containerPort: 3000
           volumeMounts:
