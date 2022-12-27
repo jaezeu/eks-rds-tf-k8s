@@ -21,5 +21,18 @@
 
 ### Architecture Diagram
 
+![arch](https://user-images.githubusercontent.com/48310743/209669630-91800b4e-9747-4d6a-bfbe-bb947da0d22e.png)
+
+#### Description
 
 ### Architecture for Multi Region(Including traffic distribution)
+
+![MULTI ARCH](https://user-images.githubusercontent.com/48310743/209669985-5ab689e4-797d-484b-9ee4-f9eac262854f.png)
+
+#### Description
+
+### Kubernetes
+
+#### Autoscaling
+
+#### Securing ConfigMap
