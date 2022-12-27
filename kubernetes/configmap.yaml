@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: defi-configmap
+data:
+  production.json: |
+    {
+        "database_url": "",
+        "database_password": "",
+        "database_user": "",
+        "database_port": ""
+    }

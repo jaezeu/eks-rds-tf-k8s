@@ -16,6 +16,14 @@
 #   vpc_security_group_ids  = [module.postgresql-sg.sg_id]
 # }
 
+
+# Security group to attach to the aurora rds being created above
+# For this testing use case, im opening it up to the subnets where the EKS would be residing in
+# I would not recommend this for a production usecase, as other workloads may also reside in those subnets, including node groups that do not require access to the RDS
+# It would be better to open the inbound connections to the node groups security group in port 5432.
+# Outbound opened to all since RDS is a managed service by AWS
+
+
 # module "postgresql-sg" {
 #   source                  = "./modules/security_group"
 #   providers = {

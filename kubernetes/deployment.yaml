@@ -18,3 +18,11 @@ spec:
           image: `8392019284.dkr.ecr.us-west-1.amazonaws.com/defi-api:1.0.0
           ports:
             - containerPort: 3000
+          volumeMounts:
+          - name: config-volume
+            mountPath: /usr/share/app/config/production.json
+            subPath: production.json
+      volumes:
+      - name: config-volume
+        configMap:
+          name: defi-configmap
