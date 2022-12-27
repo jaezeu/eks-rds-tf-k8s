@@ -48,6 +48,14 @@ With regards to splitting traffic or having a multi-region active-active infrast
 
 ### Kubernetes
 
+#### Kubeconfig file output and verifying connection
+
+![kubeconfig  command](https://user-images.githubusercontent.com/48310743/209683499-e1a402b5-2519-43e2-8e27-ff6bf39702e3.png)
+
+![kubectlgetnode](https://user-images.githubusercontent.com/48310743/209683505-cb1c37d7-6448-4b46-b927-f23360e64143.png)
+
+I added the following command: `aws eks --region ap-southeast-1 update-kubeconfig --name ${module.eks.cluster_name}` as part of the terraform provisioner resource(in `eks.tf`) , so that the path of the kube config file would be outputted in the terminal. Therefore, to verify that i can connect to the cluster, i ran the kubectl get nodes command on my terminal.
+
 #### Autoscaling
 
 I have also added in a HorizontalPodAutoscaler(File in `hpa.yaml`) to scale the deployment based on cpu utilization 50%. Alternatively this can also be performed using kubectl imperative command: `kubectl autoscale deployment defi-api-deployment --cpu-percent=50 --min=1 --max=10` 
